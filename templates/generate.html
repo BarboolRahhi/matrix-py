@@ -1,0 +1,64 @@
+{% extends 'base.html' %} {% block content %}
+
+<form method="post" action="/solve">
+  <select name="operation">
+    <option value="*" 
+    {% if form.get('operation') == '*' %} selected {% endif %}
+    >Multiplication</option>
+    <option value="+"
+    {% if form.get('operation') == '+' %} selected {% endif %}
+    >Addition</option>
+  </select>
+  <div
+    class="matrix-container"
+    style="display: flex; gap: 34px; align-items: center"
+  >
+    <div class="">
+      <h4>A Matrix</h4>
+      <div
+        class="grid"
+        style="width: 300px; display: grid; grid-template-columns: repeat({{size}},1fr);"
+      >
+        {% for i in range(0, size * size): %}
+        <input
+          style="padding: 8px"
+          type="number"
+          required
+          name="A.row{{(i/size) | int}}[{{i % size}}]"
+          value="{{form.get('A.row{row}[{col}]'.format(row=(i/size) | int, col=i % size)) if form is not undefined  else ''}}"
+        />
+        {% endfor %}
+      </div>
+    </div>
+    <div class="">
+      <h4>B Matrix</h4>
+      <div
+        class="grid"
+        style="width: 300px; display: grid; grid-template-columns: repeat({{size}},1fr);"
+      >
+        {% for i in range(0, size * size): %}
+        <input
+          style="padding: 8px"
+          type="number"
+          required
+          name="B.row{{(i/size) | int}}[{{i % size}}]"
+          value="{{form.get('B.row{row}[{col}]'.format(row=(i/size) | int, col=i % size)) if form is not undefined  else ''}}"
+        />
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <input hidden name="size" value="{{size}}" />
+  <button style="margin-top: 16px" type="submit">Solve</button>
+</form>
+{% if res != None %}
+<h2>Result of matrix A and B</h2>
+<div
+  class="grid"
+  style="margin-top: 40px; width: 300px; display: grid; grid-template-columns: repeat({{size}},1fr);"
+>
+  {% for i in res: %} {% for j in i: %}
+  <div class="" style="border: 1px solid black; padding: 8px">{{j}}</div>
+  {% endfor %} {% endfor %}
+</div>
+{% endif %} {% endblock %}
